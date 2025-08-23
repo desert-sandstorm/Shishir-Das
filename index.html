@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Exam Routine - Bogura Polytechnic Institute</title>
+  <style>
+    /* Import fonts */
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@600;700&display=swap');
+
+    body {
+      font-family: "JetBrains Mono", monospace;
+      background: linear-gradient(180deg, #f8fafc, #e2e8f0);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      color: #1e293b;
+    }
+
+    header {
+      font-family: "Crimson Pro", serif;
+      background: #1e293b;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .container {
+      flex: 1;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .grid {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      max-width: 650px;
+      width: 100%;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      border: 2px solid rgba(59,130,246,0.5); /* lighter blue for subtle border */
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    }
+
+    .card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+      border-color: rgba(59,130,246,0.8); /* slightly stronger on hover */
+    }
+
+    .card.finished {
+      opacity: 0.65;
+      filter: grayscale(100%);
+    }
+
+    .subject {
+      font-size: 24px;
+      font-weight: 900;
+      margin-bottom: 8px;
+      color: #0f172a;
+    }
+
+    .time {
+      color: #475569;
+      margin-bottom: 14px;
+      font-size: 15px;
+      font-weight: 400;
+    }
+
+    .countdown {
+      font-size: 19px;
+      font-weight: 700;
+      color: #dc2626; /* red */
+      font-family: "JetBrains Mono", monospace;
+      white-space: nowrap;
+    }
+
+    footer {
+      font-family: "Crimson Pro", serif;
+      background: #1e293b;
+      color: white; /* "Made by" text in white */
+      text-align: center;
+      padding: 20px;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    footer a {
+      color: #3b82f6; /* author link in blue */
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <header>Bogura Polytechnic Institute</header>
+
+  <div class="container">
+    <div class="grid" id="examGrid"></div>
+  </div>
+
+  <footer>
+    Made by <a href="https://www.facebook.com/shishirdas463" target="_blank">Shishir Das (RAC 100)</a>
+  </footer>
+
+  <script>
+    const exams = [
+      { subject: "Bangla", start: "2025-08-20T10:00", end: "2025-08-20T13:00" },
+      { subject: "English", start: "2025-08-24T06:00", end: "2025-08-24T09:00" },
+      { subject: "Math", start: "2025-09-01T10:00", end: "2025-09-01T13:00" },
+      { subject: "Physics", start: "2025-09-03T11:00", end: "2025-09-03T14:00" },
+      { subject: "Biology", start: "2025-09-10T00:00", end: "2025-09-10T03:00" }
+    ];
+
+    function formatDateRange(startStr, endStr) {
+      const start = new Date(startStr);
+      const end = new Date(endStr);
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      const datePart = start.toLocaleDateString("en-US", options);
+      const timeStart = start.toLocaleTimeString("en-US", { hour: 'numeric', minute: '2-digit' });
+      const timeEnd = end.toLocaleTimeString("en-US", { hour: 'numeric', minute: '2-digit' });
+      return `${datePart}, ${timeStart}–${timeEnd}`;
+    }
+
+    function getCountdown(startStr, endStr) {
+      const now = new Date();
+      const start = new Date(startStr);
+      const end = new Date(endStr);
+
+      if (now < start) {
+        let diff = start - now;
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const minutes = Math.floor((diff / (1000 * 60)) % 60);
+        const seconds = Math.floor((diff / 1000) % 60);
+
+        let parts = [];
+        if (days > 0) parts.push(days + " " + (days===1?"Day":"Days"));
+        if (hours > 0) parts.push(hours + " " + (hours===1?"Hour":"Hours"));
+        if (minutes > 0) parts.push(minutes + " " + (minutes===1?"Minute":"Minutes"));
+        if (seconds >= 0) parts.push(seconds + " " + (seconds===1?"Second":"Seconds"));
+
+        return parts.join(" ");
+      } else if (now >= start && now <= end) {
+        return "Exam Currently Running";
+      } else {
+        return "Exam Finished";
+      }
+    }
+
+    function renderExams() {
+      const grid = document.getElementById("examGrid");
+      grid.innerHTML = "";
+      exams.forEach(exam => {
+        const now = new Date();
+        const end = new Date(exam.end);
+
+        const card = document.createElement("div");
+        card.className = "card";
+        if (now > end) card.classList.add("finished");
+
+        const subject = document.createElement("div");
+        subject.className = "subject";
+        subject.textContent = exam.subject;
+
+        const time = document.createElement("div");
+        time.className = "time";
+        time.textContent = formatDateRange(exam.start, exam.end);
+
+        const countdown = document.createElement("div");
+        countdown.className = "countdown";
+        countdown.textContent = getCountdown(exam.start, exam.end);
+
+        card.appendChild(subject);
+        card.appendChild(time);
+        card.appendChild(countdown);
+
+        grid.appendChild(card);
+      });
+    }
+
+    renderExams();
+    setInterval(renderExams, 1000);
+  </script>
+</body>
+</html>
