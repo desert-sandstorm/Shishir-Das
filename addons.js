@@ -1,9 +1,9 @@
 /* =========================================================
-   ADDONS.JS — OPTIMIZED HEADER + ICON + FAVICON + SPACING
-   Core-safe, single observer
+   ADDONS.JS — FINAL COMBINED & OPTIMIZED ADD-ON
+   Core-safe | Single Observer | Mobile-friendly
 ========================================================= */
 
-(function addonsOptimized(){
+(function addonsFinal(){
 
   const FB_ICON_URL =
     "https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg";
@@ -16,7 +16,7 @@
     /* ---------- PAGE TOP SPACING ---------- */
     if (!document.body.dataset.spacingDone) {
       document.body.dataset.spacingDone = "1";
-      document.body.style.paddingTop = "12px"; // space before header
+      document.body.style.paddingTop = "12px";
     }
 
     /* ---------- AUTHOR (FB ICON ALIGNMENT) ---------- */
@@ -43,41 +43,51 @@
       }
     }
 
-    /* ---------- HEADER TITLE + CENTERING ---------- */
+    /* ---------- HEADER (NORMAL SCROLL + TITLE) ---------- */
     const header = document.querySelector("header");
     const title = header?.querySelector("h1");
 
     if (header && title && !header.dataset.headerDone) {
       header.dataset.headerDone = "1";
 
-      /* Change title text (no emoji, clean) */
-      title.textContent = "🎓 My Fourth Semester Exam";
+      title.textContent = "My Fourth Semester Exam";
       title.style.fontWeight = "700";
       title.style.margin = "0";
 
+      header.style.position = "relative"; // UNSTICKED
       header.style.display = "flex";
-      header.style.flexDirection = "column";
       header.style.justifyContent = "center";
       header.style.alignItems = "center";
       header.style.textAlign = "center";
-
-      /* Sticky header */
-      header.style.position = "sticky";
-      header.style.top = "0";
-      header.style.zIndex = "1000";
       header.style.background = "var(--bg)";
     }
 
-    /* ---------- STICKY TOP (CLOCK + BUTTONS) ---------- */
+    /* ---------- TOP SECTION (CLOCK + SWITCHES) ---------- */
     const top = document.querySelector(".top");
-    if (top && !top.dataset.topDone && header) {
-      top.dataset.topDone = "1";
+    const clock = document.querySelector(".clock");
+    const switches = document.querySelector(".switches");
 
-      top.style.position = "sticky";
-      top.style.top = header.offsetHeight + "px";
-      top.style.zIndex = "999";
-      top.style.background = "var(--bg)";
-      top.style.padding = "8px 0";
+    if (top && clock && switches && !top.dataset.layoutDone) {
+      top.dataset.layoutDone = "1";
+
+      /* Unstick */
+      top.style.position = "relative";
+      top.style.background = "transparent";
+
+      /* Stack vertically (mobile friendly) */
+      top.style.display = "flex";
+      top.style.flexDirection = "column";
+      top.style.alignItems = "stretch";
+      top.style.gap = "10px";
+
+      /* Clock full width & centered */
+      clock.style.width = "100%";
+      clock.style.textAlign = "center";
+
+      /* Switches below clock */
+      switches.style.display = "flex";
+      switches.style.justifyContent = "center";
+      switches.style.gap = "8px";
     }
 
     /* ---------- FAVICON ---------- */
