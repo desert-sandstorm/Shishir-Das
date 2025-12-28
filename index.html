@@ -1,202 +1,317 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Exam Routine - Bogura Polytechnic Institute</title>
-  <style>
-    /* Import fonts */
-    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@600;700&display=swap');
+<meta charset="UTF-8">
+<title>Exam Routine</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    body {
-      font-family: "JetBrains Mono", monospace;
-      background: linear-gradient(180deg, #f8fafc, #e2e8f0);
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      color: #1e293b;
-    }
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@600;800&display=swap" rel="stylesheet">
 
-    header {
-      font-family: "Crimson Pro", serif;
-      background: #1e293b;
-      color: white;
-      text-align: center;
-      padding: 20px;
-      font-size: 26px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-    }
+<style>
+:root{
+  --bg:#0f172a;
+  --card:#111827;
+  --border:#1e293b;
+  --text:#e5e7eb;
+  --muted:#9ca3af;
+  --accent:#3b82f6;
+}
+.light{
+  --bg:#f8fafc;
+  --card:#ffffff;
+  --border:#e5e7eb;
+  --text:#0f172a;
+  --muted:#475569;
+  --accent:#2563eb;
+}
 
-    .container {
-      flex: 1;
-      padding: 20px;
-      display: flex;
-      justify-content: center;
-    }
+*{box-sizing:border-box}
 
-    .grid {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      max-width: 650px;
-      width: 100%;
-    }
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Noto Serif Bengali', serif;
+  min-height:100vh;
+}
 
-    .card {
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      border: 2px solid rgba(59,130,246,0.5); /* lighter blue for subtle border */
-      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-    }
+/* Watermark */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:url("https://bogura.polytechedu.com/panel/img/logo.png")
+    center/300px no-repeat;
+  opacity:.08;
+  pointer-events:none;
+}
 
-    .card:hover {
-      transform: scale(1.03);
-      box-shadow: 0 6px 16px rgba(0,0,0,0.12);
-      border-color: rgba(59,130,246,0.8); /* slightly stronger on hover */
-    }
+/* Numerals */
+.num{font-family:"JetBrains Mono", monospace}
 
-    .card.finished {
-      opacity: 0.65;
-      filter: grayscale(100%);
-    }
+/* Header */
+header{
+  height:64px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:0 20px;
+}
+header h1{
+  margin:0;
+  font-size:22px;
+  font-weight:700;
+}
+.author{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  border:1px solid var(--border);
+  padding:6px 14px;
+  border-radius:999px;
+  text-decoration:none;
+  color:inherit;
+}
 
-    .subject {
-      font-size: 24px;
-      font-weight: 900;
-      margin-bottom: 8px;
-      color: #0f172a;
-    }
+/* Top */
+.top{
+  max-width:1100px;
+  margin:20px auto;
+  padding:0 18px;
+  display:flex;
+  gap:16px;
+  flex-wrap:wrap;
+}
+.billboard{
+  flex:1;
+  background:var(--card);
+  border:1px solid var(--border);
+  padding:20px;
+  border-radius:16px;
+  position:relative;
+}
+.progress{
+  position:absolute;
+  inset:0;
+  background:linear-gradient(90deg,var(--accent),transparent);
+  opacity:.15;
+  width:0%;
+}
+.clock{
+  font-size:44px;
+  font-weight:800;
+}
+.date{
+  margin-top:4px;
+  color:var(--muted);
+}
+.switches{
+  display:flex;
+  gap:10px;
+}
+button{
+  background:var(--card);
+  border:1px solid var(--border);
+  padding:10px 16px;
+  border-radius:999px;
+  color:inherit;
+  cursor:pointer;
+}
 
-    .time {
-      color: #475569;
-      margin-bottom: 14px;
-      font-size: 15px;
-      font-weight: 400;
-    }
+/* Grid */
+.container{
+  max-width:1100px;
+  margin:auto;
+  padding:0 18px 40px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:16px;
+}
 
-    .countdown {
-      font-size: 19px;
-      font-weight: 700;
-      color: #dc2626; /* red */
-      font-family: "JetBrains Mono", monospace;
-      white-space: nowrap;
-    }
+/* Card */
+.card{
+  position:relative;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:16px;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  transition:.3s ease;
+}
+.card:hover,
+.card:active{
+  transform:scale(1.06);
+}
+.card.finished{
+  opacity:.45;
+  filter:grayscale(100%);
+  pointer-events:none;
+}
+.card.next{
+  border-color:var(--accent);
+}
 
-    footer {
-      font-family: "Crimson Pro", serif;
-      background: #1e293b;
-      color: white; /* "Made by" text in white */
-      text-align: center;
-      padding: 20px;
-      font-size: 16px;
-      font-weight: 600;
-    }
+.serial{
+  position:absolute;
+  top:10px;
+  left:12px;
+  font-size:18px;
+  color:var(--accent);
+}
 
-    footer a {
-      color: #3b82f6; /* author link in blue */
-      text-decoration: none;
-      font-weight: 600;
-    }
-
-    footer a:hover {
-      text-decoration: underline;
-    }
-  </style>
+.subject{
+  margin-top:20px;
+  font-size:18px;
+  font-weight:700;
+}
+.subject-code{
+  font-size:14px;
+  font-weight:600;
+}
+.time-line{
+  font-weight:800;
+}
+.countdown{
+  font-weight:700;
+  color:var(--accent);
+}
+</style>
 </head>
+
 <body>
-  <header>Bogura Polytechnic Institute</header>
 
-  <div class="container">
-    <div class="grid" id="examGrid"></div>
+<header>
+  <h1>🎓 Bogura Polytechnic Institute</h1>
+  <a class="author" href="https://facebook.com/shishirdas463" target="_blank">
+    Shishir Das
+  </a>
+</header>
+
+<div class="top">
+  <div class="billboard">
+    <div class="progress" id="progressBar"></div>
+    <div class="clock num" id="clock"></div>
+    <div class="date" id="today"></div>
   </div>
+  <div class="switches">
+    <button onclick="toggleLang()">🌐 EN / BN</button>
+    <button onclick="toggleTheme()">🌙</button>
+  </div>
+</div>
 
-  <footer>
-    Made by <a href="https://www.facebook.com/shishirdas463" target="_blank">Shishir Das (RAC 100)</a>
-  </footer>
+<div class="container" id="cards"></div>
 
-  <script>
-    const exams = [
-      { subject: "Bangla", start: "2025-08-20T10:00", end: "2025-08-20T13:00" },
-      { subject: "English", start: "2025-08-24T06:00", end: "2025-08-24T09:00" },
-      { subject: "Math", start: "2025-09-01T10:00", end: "2025-09-01T13:00" },
-      { subject: "Physics", start: "2025-09-03T11:00", end: "2025-09-03T14:00" },
-      { subject: "Biology", start: "2025-09-10T00:00", end: "2025-09-10T03:00" }
-    ];
+<!-- LOAD EXAM DATA -->
+<script src="dates.js"></script>
 
-    function formatDateRange(startStr, endStr) {
-      const start = new Date(startStr);
-      const end = new Date(endStr);
-      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-      const datePart = start.toLocaleDateString("en-US", options);
-      const timeStart = start.toLocaleTimeString("en-US", { hour: 'numeric', minute: '2-digit' });
-      const timeEnd = end.toLocaleTimeString("en-US", { hour: 'numeric', minute: '2-digit' });
-      return `${datePart}, ${timeStart}–${timeEnd}`;
+<script>
+let bangla = false;
+let dark = true;
+
+const bnDays = ["রবিবার","সোমবার","মঙ্গলবার","বুধবার","বৃহস্পতিবার","শুক্রবার","শনিবার"];
+const bnMonths = ["জানুয়ারি","ফেব্রুয়ারি","মার্চ","এপ্রিল","মে","জুন","জুলাই","আগস্ট","সেপ্টেম্বর","অক্টোবর","নভেম্বর","ডিসেম্বর"];
+
+/* Bangladesh current time (single source of truth) */
+function bdNow(){
+  return new Date(
+    new Date().toLocaleString("en-US",{ timeZone:"Asia/Dhaka" })
+  );
+}
+
+function plural(n,en,bn){
+  return bangla ? `${n} ${bn}` : `${n} ${en}${n===1?"":"s"}`;
+}
+
+function countdown(t){
+  const now = bdNow();
+  const diff = Math.max(0, new Date(t) - now);
+  const m = Math.floor(diff/60000);
+  const h = Math.floor(m/60);
+  const d = Math.floor(h/24);
+  const emo = d<2?"⚠️":d<7?"🔴":"🟢";
+  return `${emo} ${plural(d,"Day","দিন")} ${plural(h%24,"Hour","ঘণ্টা")} ${plural(m%60,"Minute","মিনিট")} ${bangla?"বাকি":"left"}`;
+}
+
+function formatDate(d){
+  if(!bangla){
+    return d.toLocaleDateString("en-US",{
+      timeZone:"Asia/Dhaka",
+      weekday:"long",
+      year:"numeric",
+      month:"long",
+      day:"numeric"
+    });
+  }
+  return `${bnDays[d.getDay()]}, ${d.getDate()} ${bnMonths[d.getMonth()]}, ${d.getFullYear()}`;
+}
+
+function render(){
+  document.body.classList.toggle("light", !dark);
+
+  const now = bdNow();
+  clock.innerHTML = now.toLocaleTimeString("en-US",{
+    timeZone:"Asia/Dhaka",
+    hour:"numeric",
+    minute:"2-digit",
+    second:"2-digit",
+    hour12:true
+  }) + " BST";
+
+  today.textContent = formatDate(now);
+
+  cards.innerHTML = "";
+  EXAMS.sort((a,b)=>new Date(a[3]) - new Date(b[3]));
+
+  let next = false;
+  let finished = 0;
+
+  EXAMS.forEach(([en,bn,code,time],i)=>{
+    const start = new Date(time);
+    const end = new Date(start.getTime()+7200000);
+
+    const c = document.createElement("div");
+    c.className = "card";
+
+    if(now >= end){
+      c.classList.add("finished");
+      finished++;
+    }
+    if(!next && now < start){
+      c.classList.add("next");
+      next = true;
     }
 
-    function getCountdown(startStr, endStr) {
-      const now = new Date();
-      const start = new Date(startStr);
-      const end = new Date(endStr);
+    c.innerHTML = `
+      <div class="serial num">${i+1}</div>
+      <div class="subject">${bangla?bn:en}</div>
+      <div class="subject-code num">${code}</div>
+      <div>${formatDate(start)}</div>
+      <div class="time-line num">
+        ${start.toLocaleTimeString("en-US",{
+          timeZone:"Asia/Dhaka",
+          hour:"numeric",
+          minute:"2-digit",
+          hour12:true
+        })} BST
+      </div>
+      <div class="countdown num">${countdown(time)}</div>
+    `;
+    cards.appendChild(c);
+  });
 
-      if (now < start) {
-        let diff = start - now;
-        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-        const minutes = Math.floor((diff / (1000 * 60)) % 60);
-        const seconds = Math.floor((diff / 1000) % 60);
+  progressBar.style.width = Math.round(finished/EXAMS.length*100) + "%";
+}
 
-        let parts = [];
-        if (days > 0) parts.push(days + " " + (days===1?"Day":"Days"));
-        if (hours > 0) parts.push(hours + " " + (hours===1?"Hour":"Hours"));
-        if (minutes > 0) parts.push(minutes + " " + (minutes===1?"Minute":"Minutes"));
-        if (seconds >= 0) parts.push(seconds + " " + (seconds===1?"Second":"Seconds"));
+function toggleLang(){ bangla = !bangla; render(); }
+function toggleTheme(){ dark = !dark; render(); }
 
-        return parts.join(" ");
-      } else if (now >= start && now <= end) {
-        return "Exam Currently Running";
-      } else {
-        return "Exam Finished";
-      }
-    }
-
-    function renderExams() {
-      const grid = document.getElementById("examGrid");
-      grid.innerHTML = "";
-      exams.forEach(exam => {
-        const now = new Date();
-        const end = new Date(exam.end);
-
-        const card = document.createElement("div");
-        card.className = "card";
-        if (now > end) card.classList.add("finished");
-
-        const subject = document.createElement("div");
-        subject.className = "subject";
-        subject.textContent = exam.subject;
-
-        const time = document.createElement("div");
-        time.className = "time";
-        time.textContent = formatDateRange(exam.start, exam.end);
-
-        const countdown = document.createElement("div");
-        countdown.className = "countdown";
-        countdown.textContent = getCountdown(exam.start, exam.end);
-
-        card.appendChild(subject);
-        card.appendChild(time);
-        card.appendChild(countdown);
-
-        grid.appendChild(card);
-      });
-    }
-
-    renderExams();
-    setInterval(renderExams, 1000);
-  </script>
+render();
+setInterval(render, 1000);
+</script>
+<script src="addons.js" defer></script>
 </body>
 </html>
