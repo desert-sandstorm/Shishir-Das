@@ -30,7 +30,7 @@
     if (header && title && !header.dataset.done) {
       header.dataset.done = "1";
 
-      title.textContent = "My Fourth Semester Exam";
+      title.textContent = "🎓 My Fourth Semester Exam";
       title.style.margin = "0";
       title.style.fontWeight = "700";
       title.style.textAlign = "center";
@@ -204,3 +204,4 @@
   }
 
 })();
+
