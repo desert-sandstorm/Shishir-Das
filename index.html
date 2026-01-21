@@ -205,7 +205,6 @@ button{
 
 <div class="container" id="cards"></div>
 
-<!-- LOAD EXAM DATA -->
 <script src="dates.js"></script>
 
 <script>
@@ -215,25 +214,38 @@ let dark = true;
 const bnDays = ["রবিবার","সোমবার","মঙ্গলবার","বুধবার","বৃহস্পতিবার","শুক্রবার","শনিবার"];
 const bnMonths = ["জানুয়ারি","ফেব্রুয়ারি","মার্চ","এপ্রিল","মে","জুন","জুলাই","আগস্ট","সেপ্টেম্বর","অক্টোবর","নভেম্বর","ডিসেম্বর"];
 
-/* Bangladesh current time (single source of truth) */
 function bdNow(){
   return new Date(
     new Date().toLocaleString("en-US",{ timeZone:"Asia/Dhaka" })
   );
 }
 
-function plural(n,en,bn){
-  return bangla ? `${n} ${bn}` : `${n} ${en}${n===1?"":"s"}`;
+function unit(n, en, bn){
+  if(n <= 0) return "";
+  if(bangla) return `${n} ${bn}`;
+  return `${n} ${en}${n === 1 ? "" : "s"}`;
 }
 
-function countdown(t){
+function countdown(time){
   const now = bdNow();
-  const diff = Math.max(0, new Date(t) - now);
-  const m = Math.floor(diff/60000);
-  const h = Math.floor(m/60);
-  const d = Math.floor(h/24);
-  const emo = d<2?"⚠️":d<7?"🔴":"🟢";
-  return `${emo} ${plural(d,"Day","দিন")} ${plural(h%24,"Hour","ঘণ্টা")} ${plural(m%60,"Minute","মিনিট")} ${bangla?"বাকি":"left"}`;
+  const diff = new Date(time) - now;
+
+  if(diff <= 0){
+    return "EXAM IS OVER";
+  }
+
+  const totalMinutes = Math.floor(diff / 60000);
+  const days = Math.floor(totalMinutes / 1440);
+  const hours = Math.floor((totalMinutes % 1440) / 60);
+  const minutes = totalMinutes % 60;
+
+  const parts = [
+    unit(days,"Day","দিন"),
+    unit(hours,"Hour","ঘণ্টা"),
+    unit(minutes,"Minute","মিনিট")
+  ].filter(Boolean);
+
+  return `${parts.join(" ")} Left`;
 }
 
 function formatDate(d){
@@ -246,7 +258,7 @@ function formatDate(d){
       day:"numeric"
     });
   }
-  return `${bnDays[d.getDay()]}, ${d.getDate()} ${bnMonths[d.getMonth()]}, ${d.getFullYear()}`;
+  return `${bnDays[d.getDay()]}, ${bnMonths[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
 }
 
 function render(){
@@ -312,6 +324,7 @@ function toggleTheme(){ dark = !dark; render(); }
 render();
 setInterval(render, 1000);
 </script>
+
 <script src="addons.js" defer></script>
 </body>
 </html>
