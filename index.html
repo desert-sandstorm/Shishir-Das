@@ -222,8 +222,7 @@ function bdNow(){
 
 function unit(n, en, bn){
   if(n <= 0) return "";
-  if(bangla) return `${n} ${bn}`;
-  return `${n} ${en}${n === 1 ? "" : "s"}`;
+  return bangla ? `${n} ${bn}` : `${n} ${en}${n === 1 ? "" : "s"}`;
 }
 
 function countdown(time){
@@ -231,7 +230,7 @@ function countdown(time){
   const diff = new Date(time) - now;
 
   if(diff <= 0){
-    return "EXAM IS OVER";
+    return bangla ? "পরীক্ষা শেষ" : "EXAM IS OVER";
   }
 
   const totalMinutes = Math.floor(diff / 60000);
@@ -239,13 +238,19 @@ function countdown(time){
   const hours = Math.floor((totalMinutes % 1440) / 60);
   const minutes = totalMinutes % 60;
 
+  let emoji = "🟩";
+  if(days < 2) emoji = "⚠️";
+  else if(days < 5) emoji = "🔴";
+
   const parts = [
     unit(days,"Day","দিন"),
     unit(hours,"Hour","ঘণ্টা"),
     unit(minutes,"Minute","মিনিট")
   ].filter(Boolean);
 
-  return `${parts.join(" ")} Left`;
+  return bangla
+    ? `${emoji} ${parts.join(" ")} বাকি`
+    : `${emoji} ${parts.join(" ")} Left`;
 }
 
 function formatDate(d){
